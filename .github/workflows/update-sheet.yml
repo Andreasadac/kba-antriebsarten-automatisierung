@@ -3,7 +3,7 @@ name: Update Google Sheet
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 7 3,4,5 * *'  # Am 3., 4. und 5. Tag des Monats um 13 Uhr UTC
+    - cron: '0 14 3,4,5 * *'  # Am 3., 4. und 5. Tag des Monats um 14 Uhr UTC
 
 jobs:
   update-sheet:
@@ -13,6 +13,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Write Google credentials to credentials.json
-        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > credentials.json
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" | python3 -c "import sys, json; json.dump(json.load(sys.stdin), open('credentials.json', 'w'))"
       - name: Run Python script
         run: python main.py
